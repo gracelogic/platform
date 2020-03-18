@@ -31,9 +31,6 @@ import java.util.Map;
 
 @Service("esia")
 public class EsiaOAuthServiceProviderImpl extends AbstractOauthProvider implements OAuthServiceProvider {
-    private static final String ACCESS_TOKEN_ENDPOINT = "http://safecity.amfitel.ru:2111/aas/oauth2/te";
-
-    private static final String API_ENDPOINT = "http://safecity.amfitel.ru:2111/rs/prns";
 
     @Autowired
     private PropertyService propertyService;
@@ -43,6 +40,12 @@ public class EsiaOAuthServiceProviderImpl extends AbstractOauthProvider implemen
     @Transactional(rollbackFor = Exception.class)
     @Override
     public User processAuthorization(String code, String redirectUri) {
+        String ESIA_SERVICE_URL = propertyService.getPropertyValue("oauth:esia_service_url");
+        //http://safecity.amfitel.ru:2111
+
+        String ACCESS_TOKEN_ENDPOINT = ESIA_SERVICE_URL + "/aas/oauth2/te";
+        String API_ENDPOINT = ESIA_SERVICE_URL + "/rs/prns";
+
         String CLIENT_ID = propertyService.getPropertyValue("oauth:esia_client_id");
         String CLIENT_SECRET = propertyService.getPropertyValue("oauth:esia_client_secret");
 
@@ -78,10 +81,12 @@ public class EsiaOAuthServiceProviderImpl extends AbstractOauthProvider implemen
 
     @Override
     public String buildAuthRedirect() {
+        String ESIA_SERVICE_URL = propertyService.getPropertyValue("oauth:esia_service_url");
+
         String sRedirectUri = buildRedirectUri(null);
         String CLIENT_ID = propertyService.getPropertyValue("oauth:esia_client_id");
 
-        return String.format("http://safecity.amfitel.ru:2111/aas/oauth2/ac?response_type=code&scope=read&client_id=%s&redirect_uri=%s", CLIENT_ID, sRedirectUri);
+        return String.format(ESIA_SERVICE_URL + "/aas/oauth2/ac?response_type=code&scope=read&client_id=%s&redirect_uri=%s", CLIENT_ID, sRedirectUri);
     }
 
     @Override
