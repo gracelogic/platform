@@ -4,6 +4,7 @@ import com.gracelogic.platform.localization.service.LocaleHolder;
 import com.gracelogic.platform.user.Path;
 import com.gracelogic.platform.user.PlatformRole;
 import com.gracelogic.platform.user.dto.IdentifierRequestDTO;
+import com.gracelogic.platform.user.dto.ValidateIdentifierResponseDTO;
 import com.gracelogic.platform.user.dto.VerifyIdentifierRequestDTO;
 import com.gracelogic.platform.user.service.UserService;
 import com.gracelogic.platform.web.dto.EmptyResponse;
@@ -47,11 +48,8 @@ public class IdentifierApi extends AbstractAuthorizedController {
     public ResponseEntity validate(@ApiParam(name = "dto", value = "dto") @RequestBody IdentifierRequestDTO dto,
                                    @ApiParam(name = "checkAvailability", value = "checkAvailability") @RequestParam(value = "checkAvailability", required = false, defaultValue = "false") Boolean checkAvailability
                                    ) {
-        if (!userService.isIdentifierValid(dto.getIdentifierTypeId(), dto.getIdentifierValue(), checkAvailability)) {
-            return new ResponseEntity<ErrorResponse>(new ErrorResponse("signUp.INVALID_IDENTIFIER", messageSource.getMessage("signUp.INVALID_IDENTIFIER", null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<EmptyResponse>(EmptyResponse.getInstance(), HttpStatus.OK);
-        }
+        Boolean valid = userService.isIdentifierValid(dto.getIdentifierTypeId(), dto.getIdentifierValue(), checkAvailability);
+        return new ResponseEntity<ValidateIdentifierResponseDTO>(new ValidateIdentifierResponseDTO(valid), HttpStatus.OK);
     }
 
     @ApiOperation(
