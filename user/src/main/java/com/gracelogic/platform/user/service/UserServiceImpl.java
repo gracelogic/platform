@@ -355,6 +355,7 @@ public class UserServiceImpl implements UserService {
         templateParams.put("identifierTypeId", identifier.getIdentifierType().getId().toString());
         templateParams.put("identifierId", identifier.getId().toString());
         templateParams.put("baseUrl", propertyService.getPropertyValue("web:base_url"));
+        templateParams.put("verificationCode", passphrase.getValue());
         Map<String, String> fields = JsonUtils.jsonToMap(identifier.getUser().getFields());
         for (String key : fields.keySet()) {
             templateParams.put(key, fields.get(key));
@@ -362,21 +363,16 @@ public class UserServiceImpl implements UserService {
 
         if (identifier.getIdentifierType().getId().equals(DataConstants.IdentifierTypes.EMAIL.getValue())) {
             try {
-                templateParams.put("verificationCode", passphrase.getValue());
-
                 Content content = templateService.buildFromTemplate(DataConstants.TemplateTypes.EMAIL_VERIFICATION.getValue(), LocaleHolder.getLocale(), templateParams);
                 notificationService.send(com.gracelogic.platform.notification.service.DataConstants.NotificationMethods.EMAIL.getValue(),
-                        propertyService.getPropertyValue("notification:sms_from"), identifier.getValue(), content, 0);
+                        propertyService.getPropertyValue("notification:smtp_from"), identifier.getValue(), content, 0);
             } catch (Exception e) {
                 logger.error(e);
             }
 
         } else if (identifier.getIdentifierType().getId().equals(DataConstants.IdentifierTypes.PHONE.getValue())) {
             try {
-                templateParams.put("verificationCode", passphrase.getValue());
-
                 Content content = templateService.buildFromTemplate(DataConstants.TemplateTypes.SMS_VERIFICATION.getValue(), LocaleHolder.getLocale(), templateParams);
-
                 notificationService.send(com.gracelogic.platform.notification.service.DataConstants.NotificationMethods.SMS.getValue(),
                         propertyService.getPropertyValue("notification:smtp_from"), identifier.getValue(), content, 0);
 
