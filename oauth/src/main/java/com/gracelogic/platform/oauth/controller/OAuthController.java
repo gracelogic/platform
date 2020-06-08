@@ -80,10 +80,19 @@ public class OAuthController extends AbstractAuthorizedController {
         logger.info("provider: " + authProvider);
         logger.info("code: " + code);
 
+
+        Boolean codeControllerDisabled = propertyService.getPropertyValueAsBoolean("oauth:code_controller_disabled");
+        if (codeControllerDisabled != null && codeControllerDisabled) {
+            response.sendError(200);
+            return;
+        }
+
         if (StringUtils.isEmpty(code)) {
             response.sendRedirect(propertyService.getPropertyValue("oauth:redirect_fail_url"));
             return;
         }
+
+
 
         User user = null;
 
