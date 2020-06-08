@@ -33,7 +33,7 @@ public class GoogleOAuthServiceProviderImpl extends AbstractOauthProvider implem
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String redirectUri) {
+    public User processAuthorization(String code, String token, String redirectUri) {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.GOOGLE.name());
@@ -44,13 +44,19 @@ public class GoogleOAuthServiceProviderImpl extends AbstractOauthProvider implem
             catch (Exception ignored) {}
         }
 
-        Map response = OAuthUtils.postTextBodyReturnJson(ACCESS_TOKEN_ENDPOINT, String.format("code=%s&client_id=%s&client_secret=%s&redirect_uri=%s&grant_type=authorization_code", code, CLIENT_ID, CLIENT_SECRET, sRedirectUri));
-        if (response == null) {
-            return null;
+        Map response = null;
+
+        String accessToken = token;
+        if (accessToken == null) {
+            response = OAuthUtils.postTextBodyReturnJson(ACCESS_TOKEN_ENDPOINT, String.format("code=%s&client_id=%s&client_secret=%s&redirect_uri=%s&grant_type=authorization_code", code, CLIENT_ID, CLIENT_SECRET, sRedirectUri));
+            accessToken = response != null && response.get("access_token") != null ? (String) response.get("access_token") : null;
+            if (accessToken == null) {
+                return null;
+            }
         }
 
         OAuthDTO OAuthDTO = new OAuthDTO();
-        OAuthDTO.setAccessToken(response.get("access_token") != null ? (String) response.get("access_token") : null);
+        OAuthDTO.setAccessToken(accessToken);
 
         response = OAuthUtils.getQueryReturnJson(String.format(INFO_ENDPOINT, OAuthDTO.getAccessToken()));
         OAuthDTO.setUserId(response.get("id") != null ? (String) response.get("id") : null);

@@ -32,6 +32,10 @@ public abstract class AbstractOauthProvider implements OAuthServiceProvider {
     @Autowired
     private OAuthService oAuthService;
 
+    private String generateRandomPassword() {
+        return UUID.randomUUID().toString();
+    }
+
     protected User processAuthorization(UUID authProviderId, String code, OAuthDTO OAuthDTO) {
         UUID oauthIdentifierTypeId = oAuthService.getIdentifierTypeForAuthProvider(authProviderId);
         Identifier identifier = userService.findIdentifier(oauthIdentifierTypeId, OAuthDTO.getUserId(), true);
@@ -73,6 +77,7 @@ public abstract class AbstractOauthProvider implements OAuthServiceProvider {
             signUpDTO.getFields().put(UserDTO.FIELD_SURNAME, !StringUtils.isEmpty(OAuthDTO.getLastName()) ? OAuthDTO.getLastName() : null);
             signUpDTO.getFields().put(UserDTO.FIELD_ORG, !StringUtils.isEmpty(OAuthDTO.getOrg()) ? OAuthDTO.getOrg() : null);
 
+            signUpDTO.setPassword(generateRandomPassword());
 
             logger.info("Oauth registration: " + signUpDTO.toString());
 

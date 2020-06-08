@@ -33,7 +33,7 @@ public class FacebookOAuthServiceProviderImpl extends AbstractOauthProvider impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String redirectUri) {
+    public User processAuthorization(String code, String token, String redirectUri) {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.FACEBOOK.name());
@@ -43,13 +43,15 @@ public class FacebookOAuthServiceProviderImpl extends AbstractOauthProvider impl
             }
             catch (Exception ignored) {}
         }
-        Map<Object, Object> accessTokenResponse = OAuthUtils.getQueryReturnJson(String.format(ACCESS_TOKEN_ENDPOINT, CLIENT_ID, sRedirectUri, CLIENT_SECRET, code));
-        String accessToken = null;
-        if (accessTokenResponse != null && accessTokenResponse.containsKey("access_token")) {
-            accessToken = (String) accessTokenResponse.get("access_token");
-        }
+        String accessToken = token;
         if (accessToken == null) {
-            return null;
+            Map<Object, Object> accessTokenResponse = OAuthUtils.getQueryReturnJson(String.format(ACCESS_TOKEN_ENDPOINT, CLIENT_ID, sRedirectUri, CLIENT_SECRET, code));
+            if (accessTokenResponse != null && accessTokenResponse.containsKey("access_token")) {
+                accessToken = (String) accessTokenResponse.get("access_token");
+            }
+            if (accessToken == null) {
+                return null;
+            }
         }
 
         OAuthDTO OAuthDTO = new OAuthDTO();

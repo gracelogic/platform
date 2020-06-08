@@ -28,7 +28,7 @@ public class InstagramOAuthServiceProviderImpl extends AbstractOauthProvider imp
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String redirectUri) {
+    public User processAuthorization(String code, String token, String redirectUri) {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.INSTAGRAM.name());

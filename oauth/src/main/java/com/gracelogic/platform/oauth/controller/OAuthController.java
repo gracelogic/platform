@@ -96,7 +96,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = vk.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = vk.processAuthorization(code, requestUri);
+                user = vk.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via vk", e);
             }
@@ -109,7 +109,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = ok.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = ok.processAuthorization(code, requestUri);
+                user = ok.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via ok", e);
             }
@@ -122,7 +122,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = instagram.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = instagram.processAuthorization(code, requestUri);
+                user = instagram.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via instagram", e);
             }
@@ -135,7 +135,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = facebook.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = facebook.processAuthorization(code, requestUri);
+                user = facebook.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via facebook", e);
             }
@@ -148,7 +148,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = google.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = google.processAuthorization(code, requestUri);
+                user = google.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via google", e);
             }
@@ -162,7 +162,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = linkedin.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = linkedin.processAuthorization(code, requestUri);
+                user = linkedin.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via linkedin", e);
             }
@@ -175,7 +175,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 String requestUri = esia.buildRedirectUri(additionalParameters);
                 logger.info("REQUEST_URI: " + requestUri);
 
-                user = esia.processAuthorization(code, requestUri);
+                user = esia.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via esia", e);
             }
