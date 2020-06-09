@@ -50,7 +50,7 @@ public class AuthProvider extends IdObject<UUID> {
     @Column(name = "IMPORT_EMAIL", nullable = false)
     private Boolean importEmail;
 
-    @Column(name = "IMPORT_PHONR", nullable = false)
+    @Column(name = "IMPORT_PHONE", nullable = false)
     private Boolean importPhone;
 
     @Override
