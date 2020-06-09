@@ -7,6 +7,9 @@ import com.gracelogic.platform.oauth.model.AuthProvider;
 import com.gracelogic.platform.oauth.service.AbstractOauthProvider;
 import com.gracelogic.platform.oauth.service.OAuthServiceProvider;
 import com.gracelogic.platform.oauth.service.OAuthUtils;
+import com.gracelogic.platform.user.exception.CustomLocalizedException;
+import com.gracelogic.platform.user.exception.InvalidIdentifierException;
+import com.gracelogic.platform.user.exception.InvalidPassphraseException;
 import com.gracelogic.platform.user.model.User;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +36,7 @@ public class FacebookOAuthServiceProviderImpl extends AbstractOauthProvider impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String token, String redirectUri) {
+    public User processAuthorization(String code, String token, String redirectUri) throws InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.FACEBOOK.name());
@@ -63,7 +66,7 @@ public class FacebookOAuthServiceProviderImpl extends AbstractOauthProvider impl
         OAuthDTO.setLastName(response.get("last_name") != null ? StringEscapeUtils.unescapeJava((String) response.get("last_name")) : null);
         OAuthDTO.setEmail(response.get("email") != null ? StringEscapeUtils.unescapeJava((String) response.get("email")) : null);
 
-        return processAuthorization(DataConstants.OAuthProviders.FACEBOOK.getValue(), code, OAuthDTO);
+        return processAuthorization(DataConstants.OAuthProviders.FACEBOOK.getValue(), OAuthDTO);
     }
 
     @Override

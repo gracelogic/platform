@@ -7,6 +7,9 @@ import com.gracelogic.platform.oauth.model.AuthProvider;
 import com.gracelogic.platform.oauth.service.AbstractOauthProvider;
 import com.gracelogic.platform.oauth.service.OAuthServiceProvider;
 import com.gracelogic.platform.oauth.service.OAuthUtils;
+import com.gracelogic.platform.user.exception.CustomLocalizedException;
+import com.gracelogic.platform.user.exception.InvalidIdentifierException;
+import com.gracelogic.platform.user.exception.InvalidPassphraseException;
 import com.gracelogic.platform.user.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +34,7 @@ public class OkOAuthServiceProviderImpl extends AbstractOauthProvider implements
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String token, String redirectUri) {
+    public User processAuthorization(String code, String accessToken, String redirectUri) throws InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.OK.name());
@@ -61,7 +64,7 @@ public class OkOAuthServiceProviderImpl extends AbstractOauthProvider implements
         OAuthDTO.setFirstName(response.get("first_name") != null ? (String) response.get("first_name") : null);
         OAuthDTO.setLastName(response.get("last_name") != null ? (String) response.get("last_name") : null);
 
-        return processAuthorization(DataConstants.OAuthProviders.OK.getValue(), code, OAuthDTO);
+        return processAuthorization(DataConstants.OAuthProviders.OK.getValue(), OAuthDTO);
     }
 
     @Override

@@ -7,6 +7,9 @@ import com.gracelogic.platform.oauth.model.AuthProvider;
 import com.gracelogic.platform.oauth.service.AbstractOauthProvider;
 import com.gracelogic.platform.oauth.service.OAuthServiceProvider;
 import com.gracelogic.platform.oauth.service.OAuthUtils;
+import com.gracelogic.platform.user.exception.CustomLocalizedException;
+import com.gracelogic.platform.user.exception.InvalidIdentifierException;
+import com.gracelogic.platform.user.exception.InvalidPassphraseException;
 import com.gracelogic.platform.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,7 +35,7 @@ public class LinkedInOAuthServiceProviderImpl extends AbstractOauthProvider impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String token, String redirectUri) {
+    public User processAuthorization(String code, String accessToken, String redirectUri) throws InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.LINKEDIN.name());
@@ -57,7 +60,7 @@ public class LinkedInOAuthServiceProviderImpl extends AbstractOauthProvider impl
         OAuthDTO.setLastName(response.get("lastName") != null ? (String) response.get("lastName") : null);
         OAuthDTO.setEmail(response.get("emailAddress") != null ? (String) response.get("emailAddress") : null);
 
-        return processAuthorization(DataConstants.OAuthProviders.LINKEDIN.getValue(), code, OAuthDTO);
+        return processAuthorization(DataConstants.OAuthProviders.LINKEDIN.getValue(), OAuthDTO);
     }
 
     @Override

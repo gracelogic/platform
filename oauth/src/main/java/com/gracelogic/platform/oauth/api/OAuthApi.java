@@ -68,7 +68,7 @@ public class OAuthApi extends AbstractAuthorizedController {
 
     @ApiOperation(
             value = "tokenByCode",
-            notes = "Token by code",
+            notes = "Get platform token by auth code or access token",
             response = ResponseEntity.class
     )
     @ApiResponses({
@@ -106,6 +106,8 @@ public class OAuthApi extends AbstractAuthorizedController {
             return new ResponseEntity<ErrorResponse>(new ErrorResponse("signIn.USER_BLOCKED", userMessageSource.getMessage("signIn.USER_BLOCKED", null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
         } catch (ObjectNotFoundException e) {
             return new ResponseEntity<ErrorResponse>(new ErrorResponse("db.NOT_FOUND", dbMessageSource.getMessage("db.NOT_FOUND", null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
+        } catch (CustomLocalizedException e) {
+            return new ResponseEntity<ErrorResponse>(new ErrorResponse(e.getMessage(), userMessageSource.getMessage(e.getMessage(), null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
         }
     }
 }

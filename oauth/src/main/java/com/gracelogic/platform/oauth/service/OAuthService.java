@@ -15,5 +15,5 @@ public interface OAuthService {
 
     UUID getIdentifierTypeForAuthProvider(UUID authProviderId);
 
-    Token tokenByCode(UUID authProviderId, String code, String token, String remoteAddress) throws ObjectNotFoundException, UserBlockedException, TooManyAttemptsException, NotAllowedIPException, UserNotApprovedException, InvalidIdentifierException;
+    Token tokenByCode(UUID authProviderId, String code, String accessToken, String remoteAddress) throws ObjectNotFoundException, UserBlockedException, TooManyAttemptsException, NotAllowedIPException, UserNotApprovedException, InvalidIdentifierException, CustomLocalizedException;
 }

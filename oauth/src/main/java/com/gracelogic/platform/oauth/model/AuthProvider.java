@@ -47,6 +47,12 @@ public class AuthProvider extends IdObject<UUID> {
     @Column(name = "CLIENT_PUBLIC_KEY", nullable = true)
     private String clientPublicKey;
 
+    @Column(name = "IMPORT_EMAIL", nullable = false)
+    private Boolean importEmail;
+
+    @Column(name = "IMPORT_PHONR", nullable = false)
+    private Boolean importPhone;
+
     @Override
     public UUID getId() {
         return id;
@@ -131,5 +137,21 @@ public class AuthProvider extends IdObject<UUID> {
 
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public Boolean getImportEmail() {
+        return importEmail;
+    }
+
+    public void setImportEmail(Boolean importEmail) {
+        this.importEmail = importEmail;
+    }
+
+    public Boolean getImportPhone() {
+        return importPhone;
+    }
+
+    public void setImportPhone(Boolean importPhone) {
+        this.importPhone = importPhone;
     }
 }
