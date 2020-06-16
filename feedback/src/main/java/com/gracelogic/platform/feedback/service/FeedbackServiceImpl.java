@@ -49,6 +49,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         FeedbackType feedbackType = idObjectService.getObjectById(FeedbackType.class, feedbackDTO.getFeedbackTypeId());
         feedback.setFeedbackType(feedbackType);
+
+        Integer maxFieldLength = propertyService.getPropertyValueAsInteger("feedback:max_field_length");
         feedback.setFields(JsonUtils.mapToJson(feedbackDTO.getFields()));
 
         feedback = idObjectService.save(feedback);
@@ -56,7 +58,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         StringBuilder sb = new StringBuilder("Feedback:\n");
         sb.append(String.format("Type: %s\n", feedbackType.getName()));
         for (String key : feedbackDTO.getFields().keySet()) {
-            sb.append(String.format("%s: %s\n", key, feedbackDTO.getFields().get(key)));
+            String value = feedbackDTO.getFields().get(key);
+            if (maxFieldLength != null && value.length() > maxFieldLength) {
+                throw new RuntimeException("Field value is too long");
+            }
+            sb.append(String.format("%s: %s\n", key, value));
         }
 
         if (!StringUtils.isEmpty(feedbackType.getNotifyEmail())) {
