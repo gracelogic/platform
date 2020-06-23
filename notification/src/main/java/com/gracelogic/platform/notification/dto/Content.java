@@ -6,7 +6,7 @@ import java.util.Map;
 public class Content {
     private String title;
     private String body;
-    private Map<String, String> fields = new HashMap<>();
+    private Map<String, Object> fields = new HashMap<>();
 
     public String getTitle() {
         return title;
@@ -24,11 +24,11 @@ public class Content {
         this.body = body;
     }
 
-    public Map<String, String> getFields() {
+    public Map<String, Object> getFields() {
         return fields;
     }
 
-    public void setFields(Map<String, String> fields) {
+    public void setFields(Map<String, Object> fields) {
         this.fields = fields;
     }
 }

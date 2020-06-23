@@ -24,7 +24,7 @@ public class JsonUtils {
         return result;
     }
 
-    public static String mapToJson(Map<String, String> map) {
+    public static String mapToJson(Map map) {
         String result = null;
         try {
             result = objectMapper.writeValueAsString(map);

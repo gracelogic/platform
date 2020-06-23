@@ -1,6 +1,7 @@
 package com.gracelogic.platform.notification.method.push;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gracelogic.platform.db.exception.ObjectNotFoundException;
 import com.gracelogic.platform.notification.dto.Content;
 import com.gracelogic.platform.notification.dto.NotificationSenderResult;
 import com.gracelogic.platform.notification.service.HttpUtils;
@@ -60,10 +61,18 @@ public class PushNotificationSender implements NotificationSender {
         FcmNotification fcmNotification = new FcmNotification();
         fcmNotification.setTitle(content.getTitle());
         fcmNotification.setBody(content.getBody());
-        fcmNotification.setCategory(content.getFields().get("category"));
-        fcmNotification.setBadge(content.getFields().get("badge"));
-        fcmNotification.setSound(content.getFields().get("sound"));
-        fcmNotification.setClickAction(content.getFields().get("clickAction"));
+        if (content.getFields().get("category") != null) {
+            fcmNotification.setCategory((String) content.getFields().get("category"));
+        }
+        if (content.getFields().get("badge") != null) {
+            fcmNotification.setBadge((String) content.getFields().get("badge"));
+        }
+        if (content.getFields().get("sound") != null) {
+            fcmNotification.setSound((String) content.getFields().get("sound"));
+        }
+        if (content.getFields().get("clickAction") != null) {
+            fcmNotification.setClickAction((String) content.getFields().get("clickAction"));
+        }
 
         FcmMessage request = FcmMessage.to(destination);
         request.setNotification(fcmNotification);
