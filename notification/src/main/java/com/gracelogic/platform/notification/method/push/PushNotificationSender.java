@@ -58,24 +58,28 @@ public class PushNotificationSender implements NotificationSender {
     }
 
     private FcmMessage createFcmMessage(String destination, Content content) {
-        FcmNotification fcmNotification = new FcmNotification();
-        fcmNotification.setTitle(content.getTitle());
-        fcmNotification.setBody(content.getBody());
-        if (content.getFields().get("category") != null) {
-            fcmNotification.setCategory((String) content.getFields().get("category"));
-        }
-        if (content.getFields().get("badge") != null) {
-            fcmNotification.setBadge((String) content.getFields().get("badge"));
-        }
-        if (content.getFields().get("sound") != null) {
-            fcmNotification.setSound((String) content.getFields().get("sound"));
-        }
-        if (content.getFields().get("clickAction") != null) {
-            fcmNotification.setClickAction((String) content.getFields().get("clickAction"));
-        }
-
         FcmMessage request = FcmMessage.to(destination);
-        request.setNotification(fcmNotification);
+
+        if (content.getTitle() != null && content.getBody() != null) {
+            FcmNotification fcmNotification = new FcmNotification();
+            fcmNotification.setTitle(content.getTitle());
+            fcmNotification.setBody(content.getBody());
+
+            if (content.getFields().get("category") != null) {
+                fcmNotification.setCategory((String) content.getFields().get("category"));
+            }
+            if (content.getFields().get("badge") != null) {
+                fcmNotification.setBadge((String) content.getFields().get("badge"));
+            }
+            if (content.getFields().get("sound") != null) {
+                fcmNotification.setSound((String) content.getFields().get("sound"));
+            }
+            if (content.getFields().get("clickAction") != null) {
+                fcmNotification.setClickAction((String) content.getFields().get("clickAction"));
+            }
+
+            request.setNotification(fcmNotification);
+        }
 
         if (content.getFields() != null) {
             for (String key : content.getFields().keySet()) {
