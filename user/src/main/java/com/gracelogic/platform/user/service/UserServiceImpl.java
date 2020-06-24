@@ -847,9 +847,11 @@ public class UserServiceImpl implements UserService {
                 authorizedUser.setLocale(locale);
             }
 
-            try {
-                request.getSession(false).setAttribute(LocaleFilter.SESSION_ATTRIBUTE_LOCALE, locale);
-            } catch (Exception ignored) {
+            if (request != null) {
+                try {
+                    request.getSession(false).setAttribute(LocaleFilter.SESSION_ATTRIBUTE_LOCALE, locale);
+                } catch (Exception ignored) {
+                }
             }
 
             LocaleHolder.setLocale(l);
