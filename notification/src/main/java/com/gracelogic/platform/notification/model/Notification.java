@@ -41,10 +41,10 @@ public class Notification extends IdObject<UUID> {
     @Column(name = "DESTINATION", nullable = false)
     private String destination;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE", nullable = true)
     private String title;
 
-    @Column(name = "BODY", nullable = false)
+    @Column(name = "BODY", nullable = true)
     private String body;
 
     @Type(type = "stringJsonObject")
