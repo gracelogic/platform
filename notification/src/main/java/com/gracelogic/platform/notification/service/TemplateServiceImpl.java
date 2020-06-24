@@ -11,6 +11,7 @@ import com.gracelogic.platform.notification.dto.Content;
 import com.gracelogic.platform.notification.dto.TemplateDTO;
 import com.gracelogic.platform.notification.model.Template;
 import com.gracelogic.platform.notification.model.TemplateType;
+import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TemplateServiceImpl implements TemplateService {
@@ -27,6 +29,55 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Autowired
     private DictionaryService ds;
+
+    private class TemplateKey {
+        private UUID templateTypeId;
+        private String locale;
+
+        public UUID getTemplateTypeId() {
+            return templateTypeId;
+        }
+
+        public void setTemplateTypeId(UUID templateTypeId) {
+            this.templateTypeId = templateTypeId;
+        }
+
+        public String getLocale() {
+            return locale;
+        }
+
+        public void setLocale(String locale) {
+            this.locale = locale;
+        }
+
+        public TemplateKey(UUID templateTypeId, String locale) {
+            this.templateTypeId = templateTypeId;
+            this.locale = locale;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof TemplateKey)) return false;
+
+            TemplateKey that = (TemplateKey) o;
+
+            if (!getTemplateTypeId().equals(that.getTemplateTypeId())) return false;
+            return StringUtils.equalsIgnoreCase(getLocale(), that.getLocale());
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getTemplateTypeId().hashCode();
+            result = 31 * result + getLocale().hashCode();
+            return result;
+        }
+    }
+
+    private Map<TemplateKey, Template> cache = ExpiringMap.builder()
+            .expiration(30, TimeUnit.SECONDS)
+            .entryLoader(key -> findTemplate((TemplateKey) key))
+            .build();
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -100,16 +151,11 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public Content buildFromTemplate(UUID templateTypeId, Locale locale, Map<String, String> params) {
-        Map<String, Object> dbParams = new HashMap<>();
-        dbParams.put("templateTypeId", templateTypeId);
-        dbParams.put("locale", locale.toString());
-        dbParams.put("defaultLocale", "*");
+        Template template = cache.get(new TemplateKey(templateTypeId, locale.toString()));
 
-        List<Template> templates = idObjectService.getList(Template.class, null, "el.templateType.id=:templateTypeId and (el.locale=:locale or el.locale=:defaultLocale)", dbParams, "el.locale", "DESC", null, 1);
         String titleTemplate;
         String bodyTemplate;
-        if (!templates.isEmpty()) {
-            Template template = templates.iterator().next();
+        if (template != null) {
             titleTemplate = template.getTitle();
             bodyTemplate = template.getBody();
         }
@@ -133,5 +179,18 @@ public class TemplateServiceImpl implements TemplateService {
         content.setTitle(titleMustache.execute(new StringWriter(), params).toString());
 
         return content;
+    }
+
+    private Template findTemplate(TemplateKey key) {
+        Map<String, Object> dbParams = new HashMap<>();
+        dbParams.put("templateTypeId", key.getTemplateTypeId());
+        dbParams.put("locale", key.getLocale());
+        dbParams.put("defaultLocale", "*");
+
+        List<Template> templates = idObjectService.getList(Template.class, null, "el.templateType.id=:templateTypeId and (el.locale=:locale or el.locale=:defaultLocale)", dbParams, "el.locale", "DESC", null, 1);
+        if (!templates.isEmpty()) {
+            return templates.iterator().next();
+        }
+        return null;
     }
 }
