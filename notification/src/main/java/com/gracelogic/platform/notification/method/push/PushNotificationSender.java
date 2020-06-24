@@ -36,6 +36,7 @@ public class PushNotificationSender implements NotificationSender {
             ObjectMapper mapper = new ObjectMapper();
             FcmMessage fcmMessage = createFcmMessage(destination, content);
             String json = mapper.writeValueAsString(fcmMessage);
+            logger.info("FCM request: " + json);
 
             StringEntity entity = new StringEntity(json, "UTF-8");
             entity.setContentType("application/json");

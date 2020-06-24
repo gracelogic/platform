@@ -93,4 +93,6 @@ public class FcmMessage {
 	public void setTimeToLive(Long timeToLive) {
 		this.timeToLive = timeToLive;
 	}
+
+
 }
