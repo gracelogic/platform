@@ -1,10 +1,12 @@
 package com.gracelogic.platform.notification.method.push;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FcmMessage {
 	@JsonProperty("to")
 	private final String to;
