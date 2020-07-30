@@ -876,6 +876,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isIdentifierValid(UUID identifierTypeId, String identifierValue, boolean checkAvailability) {
+        identifierValue = StringUtils.trim(identifierValue);
+
         if (StringUtils.isEmpty(identifierValue)) {
             return false;
         } else {
@@ -1133,6 +1135,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean processIdentifierVerificationViaVerificationCode(UUID identifierTypeId, String identifierValue, String verificationCode) {
+        identifierValue = StringUtils.trim(identifierValue);
+
         Identifier identifier = findIdentifier(identifierTypeId, identifierValue, false);
         if (identifier == null || identifier.getVerified()) {
             return true;
