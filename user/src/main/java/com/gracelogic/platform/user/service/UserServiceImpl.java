@@ -525,6 +525,8 @@ public class UserServiceImpl implements UserService {
         }
 
         for (IdentifierDTO dto : identifierDTOs) {
+            dto.setValue(StringUtils.trim(dto.getValue()));
+
             if (!isIdentifierValid(dto.getIdentifierTypeId(), dto.getValue(), false)) {
                 throw new InvalidIdentifierException("Identifier value is not valid: " + dto.getValue());
             }
@@ -982,6 +984,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class, noRollbackFor = InvalidPassphraseException.class)
     public Identifier processSignIn(UUID identifierTypeId, String identifierValue, String password, String remoteAddress, boolean trust) throws UserBlockedException, TooManyAttemptsException, NotAllowedIPException, UserNotApprovedException, InvalidIdentifierException {
+        identifierValue = StringUtils.trim(identifierValue);
+
         if (identifierTypeId == null) {
             identifierTypeId = resolveIdentifierTypeId(identifierValue);
         }
