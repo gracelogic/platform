@@ -484,7 +484,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void deleteIdentifiersCascade(Set<UUID> identifierIds) {
+    private void deleteIdentifiersCascade(Collection<UUID> identifierIds) {
         if (identifierIds.isEmpty()) {
             return;
         }
@@ -529,6 +529,24 @@ public class UserServiceImpl implements UserService {
                 throw new InvalidIdentifierException("Identifier value is not valid: " + dto.getValue());
             }
 
+            Identifier nonCurrentUserIdentifier = findIdentifier(dto.getIdentifierTypeId(), dto.getValue(), false);
+            if (nonCurrentUserIdentifier != null) {
+                if (nonCurrentUserIdentifier.getUser() == null) {
+                    deleteIdentifiersCascade(Collections.singleton(nonCurrentUserIdentifier.getId()));
+                }
+                else if (nonCurrentUserIdentifier.getUser() != null && nonCurrentUserIdentifier.getUser().equals(user)) {
+                    //Nothing to do
+                }
+                else if (nonCurrentUserIdentifier.getUser() != null && !nonCurrentUserIdentifier.getUser().equals(user)) {
+                    if (!nonCurrentUserIdentifier.getVerified()) {
+                        deleteIdentifiersCascade(Collections.singleton(nonCurrentUserIdentifier.getId()));
+                    }
+                    else {
+                        throw new InvalidIdentifierException("Identifier is already used: " + nonCurrentUserIdentifier.getId());
+                    }
+                }
+            }
+
             Identifier identifier = null;
             if (dto.getId() != null) {
                 for (Identifier i : existingIdentifiers) {
@@ -538,28 +556,11 @@ public class UserServiceImpl implements UserService {
                     }
                 }
                 if (identifier == null) {
-                    Identifier nonCurrentUserIdentifier = idObjectService.getObjectById(Identifier.class, dto.getId());
-                    if (nonCurrentUserIdentifier != null) {
-                        if (nonCurrentUserIdentifier.getUser() == null || !nonCurrentUserIdentifier.getVerified()) {
-                            identifier = nonCurrentUserIdentifier;
-                        } else {
-                            throw new InvalidIdentifierException("Identifier is already used: " + nonCurrentUserIdentifier.getId());
-                        }
-                    } else {
-                        throw new InvalidIdentifierException("Identifier not found by id: " + dto.getId());
-                    }
+                    throw new InvalidIdentifierException("Identifier of user not found by id: " + dto.getId());
                 }
             } else {
-                Identifier nonCurrentUserIdentifier = findIdentifier(dto.getIdentifierTypeId(), dto.getValue(), false);
-                if (nonCurrentUserIdentifier != null) {
-                    if (nonCurrentUserIdentifier.getUser() == null || !nonCurrentUserIdentifier.getVerified()) {
-                        identifier = nonCurrentUserIdentifier;
-                    } else {
-                        throw new InvalidIdentifierException("Identifier is already used: " + nonCurrentUserIdentifier.getId());
-                    }
-                } else {
-                    identifier = new Identifier();
-                }
+                identifier = new Identifier();
+                identifier.setUser(user);
             }
 
             IdentifierType identifierType = ds.get(IdentifierType.class, dto.getIdentifierTypeId());
@@ -570,7 +571,6 @@ public class UserServiceImpl implements UserService {
                 identifier.setVerified(dto.getVerified() != null ? dto.getVerified() : false);
             }
             identifier.setPrimary(dto.getPrimary() != null ? dto.getPrimary() : false);
-            identifier.setUser(user);
             identifier.setValue(dto.getValue());
             idObjectService.save(identifier);
         }

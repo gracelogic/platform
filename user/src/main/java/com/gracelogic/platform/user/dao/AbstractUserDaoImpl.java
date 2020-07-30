@@ -12,7 +12,7 @@ public abstract class AbstractUserDaoImpl extends BaseDao implements UserDao {
     public Identifier findIdentifier(UUID identifierTypeId, String identifierValue, boolean enrich) {
         String query = "select el from Identifier el " +
                 (enrich ? "left join fetch el.user user " : " ") +
-                "where el.identifierType.id=:identifierTypeId and el.value=:val";
+                "where el.identifierType.id=:identifierTypeId and el.value=:val order by el.verified desc";
 
         try {
             List<Identifier> identifiers = getEntityManager().createQuery(query, Identifier.class)
