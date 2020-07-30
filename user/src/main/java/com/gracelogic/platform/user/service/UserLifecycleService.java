@@ -12,7 +12,7 @@ public interface UserLifecycleService {
 
     void signIn(AuthorizedUser authorizedUser);
 
-    User save(UserDTO userDTO, boolean mergeRoles, boolean mergeIdentifiers, AuthorizedUser executor) throws ObjectNotFoundException;
+    User save(UserDTO userDTO, boolean mergeRoles, boolean mergeIdentifiers, AuthorizedUser executor) throws ObjectNotFoundException, InvalidIdentifierException, InvalidPassphraseException;
 
     void delete(User user);
 

@@ -26,7 +26,7 @@ public interface UserService {
 
     void addRoleToUser(User user, Collection<UUID> roleIds);
 
-    User saveUser(UserDTO user, boolean mergeRoles, boolean mergeIdentifiers, AuthorizedUser executor) throws ObjectNotFoundException;
+    User saveUser(UserDTO user, boolean mergeRoles, boolean mergeIdentifiers, AuthorizedUser executor) throws ObjectNotFoundException, InvalidIdentifierException, InvalidPassphraseException;
 
     List<UserRole> getUserRoles(UUID userId);
 
