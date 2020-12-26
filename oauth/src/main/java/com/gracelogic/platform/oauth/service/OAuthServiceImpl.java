@@ -51,6 +51,10 @@ public class OAuthServiceImpl implements OAuthService {
     @Autowired
     private OAuthServiceProvider esia;
 
+    @Qualifier("apple")
+    @Autowired
+    private OAuthServiceProvider apple;
+
     @Autowired
     private UserService userService;
 
@@ -103,6 +107,8 @@ public class OAuthServiceImpl implements OAuthService {
             return DataConstants.OAuthIdentifierTypes.GOOGLE.getValue();
         } else if (authProviderId.equals(DataConstants.OAuthProviders.ESIA.getValue())) {
             return DataConstants.OAuthIdentifierTypes.ESIA.getValue();
+        } else if (authProviderId.equals(DataConstants.OAuthProviders.APPLE.getValue())) {
+            return DataConstants.OAuthIdentifierTypes.APPLE.getValue();
         } else {
             return null;
         }
@@ -126,6 +132,8 @@ public class OAuthServiceImpl implements OAuthService {
             user = google.processAuthorization(code, accessToken, null);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.ESIA.getValue())) {
             user = esia.processAuthorization(code, accessToken, null);
+        } else if (authProviderId.equals(DataConstants.OAuthProviders.APPLE.getValue())) {
+            user = apple.processAuthorization(code, accessToken, null);
         }
 
         if (user == null) {

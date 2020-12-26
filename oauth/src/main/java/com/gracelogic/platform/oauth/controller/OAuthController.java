@@ -58,6 +58,10 @@ public class OAuthController extends AbstractAuthorizedController {
     @Autowired
     private OAuthServiceProvider esia;
 
+    @Qualifier("apple")
+    @Autowired
+    private OAuthServiceProvider apple;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -187,6 +191,19 @@ public class OAuthController extends AbstractAuthorizedController {
                 user = esia.processAuthorization(code, null, requestUri);
             } catch (Exception e) {
                 logger.error("Failed to process user via esia", e);
+            }
+        } else if (authProvider.equalsIgnoreCase(DataConstants.OAuthProviders.APPLE.name())) {
+            try {
+                String additionalParameters = null;
+                if (fwd != null) {
+                    additionalParameters = "?fwd=" + fwd;
+                }
+                String requestUri = esia.buildRedirectUri(additionalParameters);
+                logger.info("REQUEST_URI: " + requestUri);
+
+                user = apple.processAuthorization(code, null, requestUri);
+            } catch (Exception e) {
+                logger.error("Failed to process user via apple", e);
             }
         } else {
             try {
