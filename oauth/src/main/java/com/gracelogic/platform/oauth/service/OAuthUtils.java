@@ -123,9 +123,9 @@ public class OAuthUtils {
             logger.info("Request status: " + httpResult);
             HttpEntity entity = httpResult.getEntity();
             if (entity != null) {
-                if (httpResult.getStatusLine().getStatusCode() == 200) {
+                //if (httpResult.getStatusLine().getStatusCode() == 200) {
                     response = EntityUtils.toString(entity);
-                }
+                //}
                 EntityUtils.consume(entity);
                 logger.info("Response body: " + response);
             }
