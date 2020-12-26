@@ -111,7 +111,7 @@ public class AppleOAuthServiceProviderImpl extends AbstractOauthProvider impleme
 
     @PostConstruct
     public void init() {
-        AuthProvider authProvider = idObjectService.getObjectById(AuthProvider.class, DataConstants.OAuthProviders.GOOGLE.getValue());
+        AuthProvider authProvider = idObjectService.getObjectById(AuthProvider.class, DataConstants.OAuthProviders.APPLE.getValue());
         if (authProvider != null) {
             if (authProvider.getAccessTokenEndpoint() != null) {
                 ACCESS_TOKEN_ENDPOINT = authProvider.getAccessTokenEndpoint();
