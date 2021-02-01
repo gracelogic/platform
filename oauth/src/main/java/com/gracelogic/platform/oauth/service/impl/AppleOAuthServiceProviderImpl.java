@@ -69,23 +69,21 @@ public class AppleOAuthServiceProviderImpl extends AbstractOauthProvider impleme
         }
 
         String decodedIdToken = decodeJWTBody(idToken);
-        logger.info("decodedIdToken:" + decodedIdToken);
+
         try {
             Map<Object, Object> json = objectMapper.readValue(decodedIdToken, new TypeReference<Map<Object, Object>>() {
             });
+            OAuthDTO OAuthDTO = new OAuthDTO();
+            OAuthDTO.setAccessToken(idToken);
+            OAuthDTO.setUserId(json.get("sub") != null ? (String) json.get("sub") : null);
+            OAuthDTO.setEmail(json.get("email") != null ? (String) json.get("email") : null);
+
+            return processAuthorization(DataConstants.OAuthProviders.APPLE.getValue(), OAuthDTO);
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
         }
-
-        OAuthDTO OAuthDTO = new OAuthDTO();
-        OAuthDTO.setAccessToken(idToken);
-        OAuthDTO.setUserId(response.get("sub") != null ? (String) response.get("sub") : null);
-        logger.info("sub:" + response.get("sub"));
-        OAuthDTO.setEmail(response.get("email") != null ? (String) response.get("email") : null);
-        logger.info("email:" + response.get("email"));
-
-        return processAuthorization(DataConstants.OAuthProviders.APPLE.getValue(), OAuthDTO);
     }
 
     @Override
