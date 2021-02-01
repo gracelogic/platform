@@ -48,44 +48,46 @@ public class AppleOAuthServiceProviderImpl extends AbstractOauthProvider impleme
         logger.info("code: " + code);
         logger.info("token: " + token);
 
-        String sRedirectUri = redirectUri;
-        if (StringUtils.isEmpty(redirectUri)) {
-            sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.APPLE.name());
+        throw new InvalidIdentifierException();
 
-            try {
-                sRedirectUri = URLEncoder.encode(sRedirectUri, "UTF-8");
-            } catch (Exception ignored) {
-            }
-        }
-
-        Map response = null;
-
-        String idToken = null;
-        response = OAuthUtils.postTextBodyReturnJson(ACCESS_TOKEN_ENDPOINT, String.format("code=%s&client_id=%s&client_secret=%s&redirect_uri=%s&grant_type=authorization_code", code, CLIENT_ID, CLIENT_SECRET, sRedirectUri));
-        idToken = response != null && response.get("id_token") != null ? (String) response.get("id_token") : null;
-        logger.info("idToken:" + idToken);
-        if (idToken == null) {
-            return null;
-        }
-
-        String decodedIdToken = decodeJWTBody(idToken);
-        logger.info("decodedIdToken:" + decodedIdToken);
-        try {
-            Map<Object, Object> json = objectMapper.readValue(decodedIdToken, new TypeReference<Map<Object, Object>>() {
-            });
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        OAuthDTO OAuthDTO = new OAuthDTO();
-        OAuthDTO.setAccessToken(idToken);
-        OAuthDTO.setUserId(response.get("sub") != null ? (String) response.get("sub") : null);
-        logger.info("sub:" + response.get("sub"));
-        OAuthDTO.setEmail(response.get("email") != null ? (String) response.get("email") : null);
-        logger.info("email:" + response.get("email"));
-
-        return processAuthorization(DataConstants.OAuthProviders.APPLE.getValue(), OAuthDTO);
+//        String sRedirectUri = redirectUri;
+//        if (StringUtils.isEmpty(redirectUri)) {
+//            sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.APPLE.name());
+//
+//            try {
+//                sRedirectUri = URLEncoder.encode(sRedirectUri, "UTF-8");
+//            } catch (Exception ignored) {
+//            }
+//        }
+//
+//        Map response = null;
+//
+//        String idToken = null;
+//        response = OAuthUtils.postTextBodyReturnJson(ACCESS_TOKEN_ENDPOINT, String.format("code=%s&client_id=%s&client_secret=%s&redirect_uri=%s&grant_type=authorization_code", code, CLIENT_ID, CLIENT_SECRET, sRedirectUri));
+//        idToken = response != null && response.get("id_token") != null ? (String) response.get("id_token") : null;
+//        logger.info("idToken:" + idToken);
+//        if (idToken == null) {
+//            return null;
+//        }
+//
+//        String decodedIdToken = decodeJWTBody(idToken);
+//        logger.info("decodedIdToken:" + decodedIdToken);
+//        try {
+//            Map<Object, Object> json = objectMapper.readValue(decodedIdToken, new TypeReference<Map<Object, Object>>() {
+//            });
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//
+//        OAuthDTO OAuthDTO = new OAuthDTO();
+//        OAuthDTO.setAccessToken(idToken);
+//        OAuthDTO.setUserId(response.get("sub") != null ? (String) response.get("sub") : null);
+//        logger.info("sub:" + response.get("sub"));
+//        OAuthDTO.setEmail(response.get("email") != null ? (String) response.get("email") : null);
+//        logger.info("email:" + response.get("email"));
+//
+//        return processAuthorization(DataConstants.OAuthProviders.APPLE.getValue(), OAuthDTO);
     }
 
     @Override
