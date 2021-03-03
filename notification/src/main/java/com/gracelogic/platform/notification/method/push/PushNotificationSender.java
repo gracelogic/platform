@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -47,9 +48,11 @@ public class PushNotificationSender implements NotificationSender {
             logger.info("Response received: " + httpResponse.getStatusLine() + "; content: " + responseJson);
 
             FcmResponse response = mapper.readValue(responseJson, FcmResponse.class);
-            String error = response.getResults().iterator().next().getError();
-            if (error != null) {
-                return new NotificationSenderResult(false, error);
+            if (response != null && !response.getResults().isEmpty()) {
+                String error = response.getResults().iterator().next().getError();
+                if (!StringUtils.isEmpty(error)) {
+                    return new NotificationSenderResult(false, error);
+                }
             }
         } catch (IOException ex) {
             return new NotificationSenderResult(false, ex.getMessage());
