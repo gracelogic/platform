@@ -48,11 +48,8 @@ public class PushNotificationSender implements NotificationSender {
             logger.info("Response received: " + httpResponse.getStatusLine() + "; content: " + responseJson);
 
             FcmResponse response = mapper.readValue(responseJson, FcmResponse.class);
-            if (response != null && !response.getResults().isEmpty()) {
-                String error = response.getResults().iterator().next().getError();
-                if (!StringUtils.isEmpty(error)) {
-                    return new NotificationSenderResult(false, error);
-                }
+            if (response != null && response.getFailure() > 0) {
+                return new NotificationSenderResult(false, responseJson);
             }
         } catch (IOException ex) {
             return new NotificationSenderResult(false, ex.getMessage());

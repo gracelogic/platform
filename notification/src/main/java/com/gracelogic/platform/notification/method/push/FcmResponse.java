@@ -15,6 +15,9 @@ public class FcmResponse {
 	@JsonProperty("failure")
 	private int failure;
 
+	@JsonProperty("canonical_ids")
+	private int canonicalIds;
+
 	@JsonProperty("results")
 	private List<FcmResult> results ;
 
