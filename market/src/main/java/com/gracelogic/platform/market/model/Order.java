@@ -45,26 +45,41 @@ public class Order extends IdObject<UUID> {
     @JoinColumn(name = "DISCOUNT_ID", nullable = true)
     private Discount discount;
 
+    /**
+     * В состоянии DRAFT способ оплаты может быть не выбран
+     */
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PAYMENT_SYSTEM_ID", nullable = true)
-    private PaymentSystem paymentSystem; //В состоянии DRAFT способ оплаты может быть не выбран
+    private PaymentSystem paymentSystem;
 
+    /**
+     * Сумма к оплате всех продуктов внутри заказа
+     */
     @Column(name = "AMOUNT", nullable = false)
-    private Long amount; //Сумма всех продуктов внутри заказа
+    private Long amount;
 
     @Column(name = "DISCOUNT_AMOUNT", nullable = false)
     private Long discountAmount; //Вычисленный размер скидки
 
+    /**
+     * Общая сумма к оплате с учётом скидки
+     */
     @Column(name = "TOTAL_AMOUNT", nullable = false)
-    private Long totalAmount; //Общая сумма к оплате с учётом скидки
+    private Long totalAmount;
 
+    /**
+     * Сумма, оплаченная пользователем
+     */
     @Column(name = "PAID", nullable = false)
-    private Long paid; //Оплачено пользователем
+    private Long paid;
 
     @Column(name = "EXTERNAL_IDENTIFIER", nullable = true)
     private String externalIdentifier;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) //Валюта, в которой необходимо провести оплату
+    /**
+     * Валюта, в которой необходимо провести оплату
+     */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TARGET_CURRENCY_ID", nullable = false)
     private Currency targetCurrency;
 
@@ -184,6 +199,9 @@ public class Order extends IdObject<UUID> {
         this.externalIdentifier = externalIdentifier;
     }
 
+    /**
+     * Валюта, в которой необходимо провести оплату
+     */
     public Currency getTargetCurrency() {
         return targetCurrency;
     }
@@ -192,6 +210,9 @@ public class Order extends IdObject<UUID> {
         this.targetCurrency = targetCurrency;
     }
 
+    /**
+     * Родительский заказ, используется для подписок
+     */
     public Order getParentOrder() {
         return parentOrder;
     }
