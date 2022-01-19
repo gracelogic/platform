@@ -6,7 +6,7 @@ import java.util.TimeZone;
 
 public class DateFormatConstants {
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    private static final String pattern = "yyyy-MM-dd'T'HH:mm:ssXXX";
 
     public static final ThreadLocal<DateFormat> DEFAULT_DATE_FORMAT = new ThreadLocal<DateFormat>() {
         @Override
