@@ -70,15 +70,15 @@ public class FacebookOAuthServiceProviderImpl extends AbstractOauthProvider impl
     }
 
     @Override
-    public String buildAuthRedirect() {
-        String sRedirectUri = buildRedirectUri(null);
+    public String buildAuthRedirect(String redirectUri) {
+        String sRedirectUri = buildRedirectUri(null, redirectUri);
 
         return String.format("https://www.facebook.com/dialog/oauth?response_type=code&scope=public_profile,email&client_id=%s&redirect_uri=%s", CLIENT_ID, sRedirectUri);
     }
 
     @Override
-    public String buildRedirectUri(String additionalParameters) {
-        String sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.FACEBOOK.name());
+    public String buildRedirectUri(String additionalParameters, String redirectUri) {
+        String sRedirectUri = redirectUri != null ? redirectUri : getRedirectUrl(DataConstants.OAuthProviders.FACEBOOK.name());
         if (!StringUtils.isEmpty(additionalParameters)) {
             sRedirectUri = sRedirectUri + additionalParameters;
         }

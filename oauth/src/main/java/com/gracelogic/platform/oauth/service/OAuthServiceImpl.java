@@ -59,26 +59,26 @@ public class OAuthServiceImpl implements OAuthService {
     private UserService userService;
 
     @Override
-    public List<AuthProviderDTO> getAuthProviders() {
+    public List<AuthProviderDTO> getAuthProviders(String redirectUri) {
         List<AuthProvider> providers = idObjectService.getList(AuthProvider.class);
         List<AuthProviderDTO> dtos = new LinkedList<>();
         for (AuthProvider provider : providers) {
             AuthProviderDTO dto = AuthProviderDTO.prepare(provider);
             dto.setClientId(provider.getClientId());
             if (dto.getId().equals(DataConstants.OAuthProviders.VK.getValue())) {
-                dto.setUrl(vk.buildAuthRedirect());
+                dto.setUrl(vk.buildAuthRedirect(redirectUri));
             } else if (dto.getId().equals(DataConstants.OAuthProviders.OK.getValue())) {
-                dto.setUrl(ok.buildAuthRedirect());
+                dto.setUrl(ok.buildAuthRedirect(redirectUri));
             } else if (dto.getId().equals(DataConstants.OAuthProviders.INSTAGRAM.getValue())) {
-                dto.setUrl(instagram.buildAuthRedirect());
+                dto.setUrl(instagram.buildAuthRedirect(redirectUri));
             } else if (dto.getId().equals(DataConstants.OAuthProviders.FACEBOOK.getValue())) {
-                dto.setUrl(facebook.buildAuthRedirect());
+                dto.setUrl(facebook.buildAuthRedirect(redirectUri));
             } else if (dto.getId().equals(DataConstants.OAuthProviders.GOOGLE.getValue())) {
-                dto.setUrl(google.buildAuthRedirect());
+                dto.setUrl(google.buildAuthRedirect(redirectUri));
             } else if (dto.getId().equals(DataConstants.OAuthProviders.LINKEDIN.getValue())) {
-                dto.setUrl(linkedin.buildAuthRedirect());
+                dto.setUrl(linkedin.buildAuthRedirect(redirectUri));
             } else if (dto.getId().equals(DataConstants.OAuthProviders.ESIA.getValue())) {
-                dto.setUrl(esia.buildAuthRedirect());
+                dto.setUrl(esia.buildAuthRedirect(redirectUri));
             }
 
             dtos.add(dto);

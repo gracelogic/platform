@@ -68,15 +68,15 @@ public class VkOAuthServiceProviderImpl extends AbstractOauthProvider implements
     }
 
     @Override
-    public String buildAuthRedirect() {
-        String sRedirectUri = buildRedirectUri(null);
+    public String buildAuthRedirect(String redirectUri) {
+        String sRedirectUri = buildRedirectUri(null, redirectUri);
 
         return String.format("https://oauth.vk.com/authorize?response_type=code&scope=email,phone&display=popup&client_id=%s&redirect_uri=%s", CLIENT_ID, sRedirectUri);
     }
 
     @Override
-    public String buildRedirectUri(String additionalParameters) {
-        String sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.VK.name());
+    public String buildRedirectUri(String additionalParameters, String redirectUri) {
+        String sRedirectUri = redirectUri != null ? redirectUri : getRedirectUrl(DataConstants.OAuthProviders.VK.name());
         if (!StringUtils.isEmpty(additionalParameters)) {
             sRedirectUri = sRedirectUri + additionalParameters;
         }

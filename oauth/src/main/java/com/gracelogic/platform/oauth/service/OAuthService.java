@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface OAuthService {
-    List<AuthProviderDTO> getAuthProviders();
+    List<AuthProviderDTO> getAuthProviders(String redirectUri);
 
     UUID getIdentifierTypeForAuthProvider(UUID authProviderId);
 

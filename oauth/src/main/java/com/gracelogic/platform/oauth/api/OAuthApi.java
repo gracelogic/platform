@@ -61,8 +61,8 @@ public class OAuthApi extends AbstractAuthorizedController {
     )
     @RequestMapping(value = "providers", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity providers() {
-        List<AuthProviderDTO> providers = oAuthService.getAuthProviders();
+    public ResponseEntity providers(@RequestParam(value = "redirectUri", required = false) String redirectUri) {
+        List<AuthProviderDTO> providers = oAuthService.getAuthProviders(redirectUri);
         return new ResponseEntity<List<AuthProviderDTO>>(providers, HttpStatus.OK);
     }
 

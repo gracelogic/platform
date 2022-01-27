@@ -106,7 +106,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = vk.buildRedirectUri(additionalParameters);
+                String requestUri = vk.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = vk.processAuthorization(code, null, requestUri);
@@ -119,7 +119,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = ok.buildRedirectUri(additionalParameters);
+                String requestUri = ok.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = ok.processAuthorization(code, null, requestUri);
@@ -132,7 +132,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = instagram.buildRedirectUri(additionalParameters);
+                String requestUri = instagram.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = instagram.processAuthorization(code, null, requestUri);
@@ -145,7 +145,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = facebook.buildRedirectUri(additionalParameters);
+                String requestUri = facebook.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = facebook.processAuthorization(code, null, requestUri);
@@ -158,7 +158,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = google.buildRedirectUri(additionalParameters);
+                String requestUri = google.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = google.processAuthorization(code, null, requestUri);
@@ -172,7 +172,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = linkedin.buildRedirectUri(additionalParameters);
+                String requestUri = linkedin.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = linkedin.processAuthorization(code, null, requestUri);
@@ -185,7 +185,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = esia.buildRedirectUri(additionalParameters);
+                String requestUri = esia.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = esia.processAuthorization(code, null, requestUri);
@@ -198,7 +198,7 @@ public class OAuthController extends AbstractAuthorizedController {
                 if (fwd != null) {
                     additionalParameters = "?fwd=" + fwd;
                 }
-                String requestUri = esia.buildRedirectUri(additionalParameters);
+                String requestUri = esia.buildRedirectUri(additionalParameters, null);
                 logger.info("REQUEST_URI: " + requestUri);
 
                 user = apple.processAuthorization(code, null, requestUri);

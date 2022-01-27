@@ -72,15 +72,15 @@ public class GoogleOAuthServiceProviderImpl extends AbstractOauthProvider implem
     }
 
     @Override
-    public String buildAuthRedirect() {
-        String sRedirectUri = buildRedirectUri(null);
+    public String buildAuthRedirect(String redirectUri) {
+        String sRedirectUri = buildRedirectUri(null, redirectUri);
 
         return String.format("https://accounts.google.com/o/oauth2/auth?response_type=code&scope=email&client_id=%s&redirect_uri=%s", CLIENT_ID, sRedirectUri);
     }
 
     @Override
-    public String buildRedirectUri(String additionalParameters) {
-        String sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.GOOGLE.name());
+    public String buildRedirectUri(String additionalParameters, String redirectUri) {
+        String sRedirectUri = redirectUri != null ? redirectUri : getRedirectUrl(DataConstants.OAuthProviders.GOOGLE.name());
         if (!StringUtils.isEmpty(additionalParameters)) {
             sRedirectUri = sRedirectUri + additionalParameters;
         }

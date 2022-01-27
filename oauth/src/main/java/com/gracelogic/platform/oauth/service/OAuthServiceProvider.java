@@ -8,7 +8,7 @@ import com.gracelogic.platform.user.model.User;
 public interface OAuthServiceProvider {
     User processAuthorization(String code, String accessToken, String redirectUri) throws InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException;
 
-    String buildAuthRedirect();
+    String buildAuthRedirect(String redirectUri);
 
-    String buildRedirectUri(String additionalParameters);
+    String buildRedirectUri(String additionalParameters, String redirectUri);
 }
