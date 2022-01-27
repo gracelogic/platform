@@ -115,25 +115,25 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public Token tokenByCode(UUID authProviderId, String code, String accessToken, String remoteAddress) throws ObjectNotFoundException, UserBlockedException, TooManyAttemptsException, NotAllowedIPException, UserNotApprovedException, InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
+    public Token tokenByCode(UUID authProviderId, String code, String accessToken, String redirectUri, String remoteAddress) throws ObjectNotFoundException, UserBlockedException, TooManyAttemptsException, NotAllowedIPException, UserNotApprovedException, InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
         User user = null;
         
         if (authProviderId.equals(DataConstants.OAuthProviders.VK.getValue())) {
-            user = vk.processAuthorization(code, accessToken, null);
+            user = vk.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.OK.getValue())) {
-            user = ok.processAuthorization(code, accessToken, null);
+            user = ok.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.FACEBOOK.getValue())) {
-            user = facebook.processAuthorization(code, accessToken, null);
+            user = facebook.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.LINKEDIN.getValue())) {
-            user = linkedin.processAuthorization(code, accessToken, null);
+            user = linkedin.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.INSTAGRAM.getValue())) {
-            user = instagram.processAuthorization(code, accessToken, null);
+            user = instagram.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.GOOGLE.getValue())) {
-            user = google.processAuthorization(code, accessToken, null);
+            user = google.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.ESIA.getValue())) {
-            user = esia.processAuthorization(code, accessToken, null);
+            user = esia.processAuthorization(code, accessToken, redirectUri);
         } else if (authProviderId.equals(DataConstants.OAuthProviders.APPLE.getValue())) {
-            user = apple.processAuthorization(code, accessToken, null);
+            user = apple.processAuthorization(code, accessToken, redirectUri);
         }
 
         if (user == null) {

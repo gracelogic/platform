@@ -82,7 +82,7 @@ public class OAuthApi extends AbstractAuthorizedController {
     @RequestMapping(value = "/token-by-code", method = RequestMethod.POST)
     public ResponseEntity tokenByCode(HttpServletRequest request, HttpServletResponse response, @RequestBody TokenByCodeRequestDTO dto) {
         try {
-            Token token = oAuthService.tokenByCode(dto.getAuthProviderId(), dto.getCode(), dto.getAccessToken(), ServletUtils.getRemoteAddress(request));
+            Token token = oAuthService.tokenByCode(dto.getAuthProviderId(), dto.getCode(), dto.getAccessToken(), dto.getRedirectUri(), ServletUtils.getRemoteAddress(request));
             if (token != null) {
                 User user = token.getIdentifier().getUser();
                 AuthorizedUser authorizedUser = AuthorizedUser.prepare(user);

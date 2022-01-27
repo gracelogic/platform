@@ -6,6 +6,7 @@ public class TokenByCodeRequestDTO {
     private UUID authProviderId;
     private String code;
     private String accessToken;
+    private String redirectUri;
 
     public String getCode() {
         return code;
@@ -29,5 +30,13 @@ public class TokenByCodeRequestDTO {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getRedirectUri() {
+        return redirectUri;
+    }
+
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
     }
 }
