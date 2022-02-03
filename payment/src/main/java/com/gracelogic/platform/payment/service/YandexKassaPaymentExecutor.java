@@ -53,8 +53,26 @@ public class YandexKassaPaymentExecutor implements PaymentExecutor {
             //Создаём платёж на сервере
             paymentDTO.setConfirmation(new YandexKassaConfirmationDTO("redirect", propertyService.getPropertyValue("payment:yandex_kassa_redirect_url")));
         }
+
+        if (!StringUtils.isEmpty(request.getDescription())) {
+            YandexKassaReceiptDTO receiptDTO = new YandexKassaReceiptDTO();
+            paymentDTO.setReceipt(receiptDTO);
+
+            YandexKassaReceiptItemDTO itemDTO = new YandexKassaReceiptItemDTO();
+            itemDTO.setAmount(paymentDTO.getAmount());
+            itemDTO.setQuantity(1D);
+            itemDTO.setDescription(request.getDescription());
+            receiptDTO.getItems().add(itemDTO);
+
+            YandexKassaReceiptCustomerDTO customerDTO = new YandexKassaReceiptCustomerDTO();
+            customerDTO.setEmail(request.getParams().get("customer_full_name"));
+            customerDTO.setEmail(request.getParams().get("customer_email"));
+            receiptDTO.setCustomer(customerDTO);
+        }
+
         try {
             YandexKassaPaymentDTO result = createPayment(paymentDTO, propertyService.getPropertyValue("payment:yandex_kassa_shop_id"), propertyService.getPropertyValue("payment:yandex_kassa_secret"));
+
             Map<String, String> responseParams = new HashMap<>();
             request.getParams().put("confirmation_url", result.getConfirmation().getConfirmation_url());
             return new PaymentExecutionResultDTO(false, result.getId(), request.getParams());
