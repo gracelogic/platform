@@ -128,20 +128,20 @@ public class YandexKassaPaymentExecutor implements PaymentExecutor {
     private static YandexKassaPaymentDTO createPayment(YandexKassaCreatePaymentDTO request, String shopId, String secret) throws Exception {
         CloseableHttpClient httpClient = HttpClientUtils.getMultithreadedUnsecuredClient();
         String uri = API_URL + "/api/v3/payments";
-        logger.debug("request url: " + uri);
+        logger.info("request url: " + uri);
         HttpPost sendMethod = new HttpPost(uri);
         sendMethod.addHeader("Authorization", "Basic " + Utils.getBase64Authorization(shopId, secret));
         sendMethod.addHeader("Content-Type", "application/json");
         sendMethod.addHeader("Accept", "application/json");
         sendMethod.addHeader("Idempotence-Key", UUID.randomUUID().toString());
         String requestBody = mapper.writeValueAsString(request);
-        logger.debug("request body: " + requestBody);
+        logger.info("request body: " + requestBody);
         sendMethod.setEntity(new StringEntity(requestBody));
         CloseableHttpResponse result = httpClient.execute(sendMethod);
-        logger.debug("response status: " + result.getStatusLine().getStatusCode());
+        logger.info("response status: " + result.getStatusLine().getStatusCode());
         HttpEntity entity = result.getEntity();
         String response = EntityUtils.toString(entity);
-        logger.debug("response body: " + response);
+        logger.info("response body: " + response);
         return mapper.readValue(response, YandexKassaPaymentDTO.class);
     }
 
