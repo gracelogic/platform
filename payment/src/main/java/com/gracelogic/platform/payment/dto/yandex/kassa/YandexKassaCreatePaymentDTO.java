@@ -17,6 +17,7 @@ public class YandexKassaCreatePaymentDTO {
     private Boolean save_payment_method;
     private String client_ip;
     private Map<String, String> metadata;
+    private YandexKassaReceiptDTO receipt;
 
     public YandexKassaAmountDTO getAmount() {
         return amount;
@@ -106,6 +107,14 @@ public class YandexKassaCreatePaymentDTO {
         this.metadata = metadata;
     }
 
+    public YandexKassaReceiptDTO getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(YandexKassaReceiptDTO receipt) {
+        this.receipt = receipt;
+    }
+
     @Override
     public String toString() {
         return "YandexKassaCreatePaymentDTO{" +
@@ -120,6 +129,7 @@ public class YandexKassaCreatePaymentDTO {
                 ", save_payment_method=" + save_payment_method +
                 ", client_ip='" + client_ip + '\'' +
                 ", metadata=" + metadata +
+                ", receipt=" + receipt +
                 '}';
     }
 }
