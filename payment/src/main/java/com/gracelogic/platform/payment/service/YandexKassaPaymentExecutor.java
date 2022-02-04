@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+
 public class YandexKassaPaymentExecutor implements PaymentExecutor {
     private static final String API_URL = "https://payment.yandex.net";
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -136,7 +138,7 @@ public class YandexKassaPaymentExecutor implements PaymentExecutor {
         sendMethod.addHeader("Idempotence-Key", UUID.randomUUID().toString());
         String requestBody = mapper.writeValueAsString(request);
         logger.info("request body: " + requestBody);
-        sendMethod.setEntity(new StringEntity(requestBody));
+        sendMethod.setEntity(new StringEntity(requestBody, APPLICATION_JSON));
         CloseableHttpResponse result = httpClient.execute(sendMethod);
         logger.info("response status: " + result.getStatusLine().getStatusCode());
         HttpEntity entity = result.getEntity();
