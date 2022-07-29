@@ -915,7 +915,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Identifier findIdentifier(UUID identifierTypeId, String value, boolean enrich) {
-        return userDao.findIdentifier(identifierTypeId, value, enrich);
+        IdentifierType identifierType = ds.get(IdentifierType.class, identifierTypeId);
+
+        return userDao.findIdentifier(identifierTypeId, value, identifierType.getCaseIndependent(), enrich);
     }
 
     @Override

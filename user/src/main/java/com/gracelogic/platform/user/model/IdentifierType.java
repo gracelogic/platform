@@ -45,6 +45,9 @@ public class IdentifierType extends IdObject<UUID> implements Dictionary {
     @Column(name = "VALIDATION_REGEX", nullable = true)
     private String validationRegex;
 
+    @Column(name = "IS_CASE_INDEPENDENT", nullable = false)
+    private Boolean caseIndependent;
+
     @Override
     public UUID getId() {
         return id;
@@ -127,5 +130,13 @@ public class IdentifierType extends IdObject<UUID> implements Dictionary {
     @Override
     public String getCode() {
         return null;
+    }
+
+    public Boolean getCaseIndependent() {
+        return caseIndependent;
+    }
+
+    public void setCaseIndependent(Boolean caseIndependent) {
+        this.caseIndependent = caseIndependent;
     }
 }

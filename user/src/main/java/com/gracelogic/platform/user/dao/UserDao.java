@@ -13,5 +13,5 @@ public interface UserDao {
 
     List<Object[]> getLastActiveUsersSessions();
 
-    Identifier findIdentifier(UUID identifierTypeId, String identifierValue, boolean enrich);
+    Identifier findIdentifier(UUID identifierTypeId, String identifierValue, boolean caseIndependent, boolean enrich);
 }
