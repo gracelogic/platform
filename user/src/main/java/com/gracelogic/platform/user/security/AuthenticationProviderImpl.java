@@ -52,7 +52,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
                 throw new TokenNotFoundException("Token not found");
             }
 
-            if (!token.getActive()) {
+            if (!token.getActive() || token.getUser().getBlocked()) {
                 throw new TokenExpiredException("Token is expired");
             }
 
