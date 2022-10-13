@@ -56,7 +56,7 @@ public class VkOAuthServiceProviderImpl extends AbstractOauthProvider implements
         OAuthDTO.setUserId(response.get("user_id") != null ? String.valueOf(response.get("user_id")) : null);
         OAuthDTO.setEmail(response.get("email") != null ? (String) response.get("email") : null);
 
-        response = OAuthUtils.getQueryReturnJson(String.format("%s?user_ids=%s&v=5.27&fields=photo_100,city,verified,contacts&access_token=%s", INFO_ENDPOINT, OAuthDTO.getUserId(), OAuthDTO.getAccessToken()));
+        response = OAuthUtils.getQueryReturnJson(String.format("%s?user_ids=%s&v=5.131&fields=photo_100,city,verified,contacts&access_token=%s", INFO_ENDPOINT, OAuthDTO.getUserId(), OAuthDTO.getAccessToken()));
 
         response = (Map) ((ArrayList) response.get("response")).iterator().next();
 
