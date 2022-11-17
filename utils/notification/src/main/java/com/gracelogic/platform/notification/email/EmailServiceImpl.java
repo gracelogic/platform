@@ -26,18 +26,30 @@ public class EmailServiceImpl implements EmailService {
         logger.info(String.format("Sending e-mail to: %s", message.getTo()));
 
         try {
+
+            boolean isSslEnable = propertyService.getPropertyValueAsBoolean("notification:smtp_ssl_enable"));
+            boolean isAuth = propertyService.getPropertyValueAsBoolean("notification:smtp_auth");
+
             Properties p = new Properties();
             p.put("mail.smtp.host", propertyService.getPropertyValue("notification:smtp_host"));
             p.put("mail.smtp.port", propertyService.getPropertyValue("notification:smtp_port"));
             p.put("mail.smtp.auth", propertyService.getPropertyValue("notification:smtp_auth"));
-            p.put("mail.smtp.socketFactory.port", propertyService.getPropertyValue("notification:smtp_socketFactory_port"));
-            p.put("mail.smtp.socketFactory.class", propertyService.getPropertyValue("notification:smtp_socketFactory_class"));
             p.put("mail.smtp.ssl.enable", propertyService.getPropertyValue("notification:smtp_ssl_enable"));
-            Authenticator auth = new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(propertyService.getPropertyValue("notification:smtp_user"), propertyService.getPropertyValue("notification:smtp_password"));
-                }
-            };
+
+            if (isSslEnable) {
+                p.put("mail.smtp.socketFactory.port", propertyService.getPropertyValue("notification:smtp_socketFactory_port"));
+                p.put("mail.smtp.socketFactory.class", propertyService.getPropertyValue("notification:smtp_socketFactory_class"));
+            }
+
+            Authenticator auth = null;
+            if (isAuth) {
+                auth = new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(propertyService.getPropertyValue("notification:smtp_user"), propertyService.getPropertyValue("notification:smtp_password"));
+                    }
+                };
+            }
+
             Session s = Session.getInstance(p, auth);
             javax.mail.Message msg = new MimeMessage(s);
             msg.setFrom(new InternetAddress(message.getFrom()));
