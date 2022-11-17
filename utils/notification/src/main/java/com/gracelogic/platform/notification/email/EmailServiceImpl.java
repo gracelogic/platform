@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
 
         try {
 
-            boolean isSslEnable = propertyService.getPropertyValueAsBoolean("notification:smtp_ssl_enable"));
+            boolean isSslEnable = propertyService.getPropertyValueAsBoolean("notification:smtp_ssl_enable");
             boolean isAuth = propertyService.getPropertyValueAsBoolean("notification:smtp_auth");
 
             Properties p = new Properties();
