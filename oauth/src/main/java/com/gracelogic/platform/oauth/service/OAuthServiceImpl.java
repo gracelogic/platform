@@ -15,6 +15,7 @@ import com.gracelogic.platform.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
@@ -57,6 +58,8 @@ public class OAuthServiceImpl implements OAuthService {
 
     @Autowired
     private UserService userService;
+
+    private static Logger logger = Logger.getLogger(OAuthServiceImpl.class);
 
     @Override
     public List<AuthProviderDTO> getAuthProviders(String redirectUri) {
@@ -116,6 +119,8 @@ public class OAuthServiceImpl implements OAuthService {
 
     @Override
     public Token tokenByCode(UUID authProviderId, String code, String accessToken, String redirectUri, String remoteAddress) throws ObjectNotFoundException, UserBlockedException, TooManyAttemptsException, NotAllowedIPException, UserNotApprovedException, InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
+        logger.info("Token by code, authProviderId: " + authProviderId.toString() + "; code: " + code + "; accessToken: " + accessToken + "; redirectUri: " + redirectUri + "; remoteAddress: " + remoteAddress);
+
         User user = null;
         
         if (authProviderId.equals(DataConstants.OAuthProviders.VK.getValue())) {

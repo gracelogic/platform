@@ -33,7 +33,7 @@ public class VkOAuthServiceProviderImpl extends AbstractOauthProvider implements
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public User processAuthorization(String code, String accessToken, String redirectUri) throws InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
+    public User processAuthorization(String code, String token, String redirectUri) throws InvalidIdentifierException, InvalidPassphraseException, CustomLocalizedException {
         String sRedirectUri = redirectUri;
         if (StringUtils.isEmpty(redirectUri)) {
             sRedirectUri = getRedirectUrl(DataConstants.OAuthProviders.VK.name());
@@ -44,25 +44,29 @@ public class VkOAuthServiceProviderImpl extends AbstractOauthProvider implements
             catch (Exception ignored) {}
         }
 
+        Map response = null;
 
-        Map response = OAuthUtils.getQueryReturnJson(String.format("%s?client_id=%s&client_secret=%s&code=%s&redirect_uri=%s", ACCESS_TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, code, sRedirectUri));
-
-        if (response == null) {
-            return null;
+        String accessToken = token;
+        if (accessToken == null) {
+            response = OAuthUtils.getQueryReturnJson(String.format("%s?client_id=%s&client_secret=%s&code=%s&redirect_uri=%s", ACCESS_TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, code, sRedirectUri));
+            accessToken = response.get("access_token") != null ? (String) response.get("access_token") : null;
+            if (accessToken == null) {
+                return null;
+            }
         }
 
         OAuthDTO OAuthDTO = new OAuthDTO();
-        OAuthDTO.setAccessToken(response.get("access_token") != null ? (String) response.get("access_token") : null);
-        OAuthDTO.setUserId(response.get("user_id") != null ? String.valueOf(response.get("user_id")) : null);
-        OAuthDTO.setEmail(response.get("email") != null ? (String) response.get("email") : null);
+        OAuthDTO.setAccessToken(accessToken);
 
-        response = OAuthUtils.getQueryReturnJson(String.format("%s?user_ids=%s&v=5.131&fields=photo_100,city,verified,contacts&access_token=%s", INFO_ENDPOINT, OAuthDTO.getUserId(), OAuthDTO.getAccessToken()));
+        response = OAuthUtils.getQueryReturnJson(String.format("%s?v=5.131&fields=photo_100,city,verified,contacts&access_token=%s", INFO_ENDPOINT, OAuthDTO.getAccessToken()));
 
         response = (Map) ((ArrayList) response.get("response")).iterator().next();
 
+        OAuthDTO.setUserId(response.get("id") != null ? String.valueOf(response.get("id")) : null);
         OAuthDTO.setFirstName(response.get("first_name") != null ? (String) response.get("first_name") : null);
         OAuthDTO.setLastName(response.get("last_name") != null ? (String) response.get("last_name") : null);
         OAuthDTO.setPhone(response.get("mobile_phone") != null ? (String) response.get("mobile_phone") : null);
+        OAuthDTO.setEmail(response.get("email") != null ? (String) response.get("email") : null);
 
         return processAuthorization(DataConstants.OAuthProviders.VK.getValue(), OAuthDTO);
     }
