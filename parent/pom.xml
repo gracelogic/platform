@@ -12,7 +12,7 @@
     <properties>
         <uiScope>compile</uiScope>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.3.14</spring.version>
+        <spring.version>6.0.0</spring.version>
         <spring-security.version>5.3.10.RELEASE</spring-security.version>
         <hibernate.version>5.6.5.Final</hibernate.version>
         <commons-codec.version>1.14</commons-codec.version>
