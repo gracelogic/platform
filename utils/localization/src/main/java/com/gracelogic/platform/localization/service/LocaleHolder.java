@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class LocaleHolder {
     private static ThreadLocal<Locale> locale = new ThreadLocal<Locale>();
-    public static final Locale defaultLocale = LocaleUtils.toLocale("en_US");
+    public static Locale defaultLocale = LocaleUtils.toLocale("en_US");
 
     public static Locale getLocale() {
         if (locale.get() == null) {

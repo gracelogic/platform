@@ -67,7 +67,8 @@ public class UserServiceImpl implements UserService {
             UserDTO.setUserNameFormat(userNameFormat);
         }
 
-        if (propertyService.getPropertyValueAsBoolean("user:one_session_per_user")) {
+        Boolean oneSessionPerUser = propertyService.getPropertyValueAsBoolean("user:one_session_per_user");
+        if (oneSessionPerUser != null && oneSessionPerUser) {
             List<Object[]> lastActiveUsersSession = userDao.getLastActiveUsersSessions();
             logger.info("Loaded last users sessions: " + lastActiveUsersSession.size());
             for (Object[] obj : lastActiveUsersSession) {
@@ -75,6 +76,16 @@ public class UserServiceImpl implements UserService {
                 String sessionId = (String) obj[1];
 
                 LastSessionHolder.updateLastSessionSessionId(userId, sessionId);
+            }
+        }
+        
+        //Load default locale
+        String defaultLocale = propertyService.getPropertyValue("user:default_locale");
+        if (!StringUtils.isEmpty(defaultLocale)) {
+            try {
+                LocaleHolder.defaultLocale = LocaleUtils.toLocale(defaultLocale);
+            } catch (Exception e) {
+                logger.error("Failed to override default locale", e);
             }
         }
     }
