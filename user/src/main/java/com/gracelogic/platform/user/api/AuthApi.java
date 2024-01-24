@@ -148,7 +148,7 @@ public class AuthApi extends AbstractAuthorizedController {
         } catch (TooFastOperationException e) {
             return new ResponseEntity<ErrorResponse>(new ErrorResponse("common.TOO_FAST_OPERATION", messageSource.getMessage("common.TOO_FAST_OPERATION", null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
         } catch (ObjectNotFoundException e) {
-            return new ResponseEntity<ErrorResponse>(new ErrorResponse("db.NOT_FOUND", dbMessageSource.getMessage("db.NOT_FOUND", null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ErrorResponse>(new ErrorResponse("common.IDENTIFIER_NOT_FOUND", messageSource.getMessage("common.IDENTIFIER_NOT_FOUND", null, LocaleHolder.getLocale())), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<EmptyResponse>(EmptyResponse.getInstance(), HttpStatus.OK);
     }
