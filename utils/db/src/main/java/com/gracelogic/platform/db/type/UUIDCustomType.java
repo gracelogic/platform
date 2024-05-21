@@ -17,16 +17,21 @@ public class UUIDCustomType extends AbstractSingleColumnStandardBasicType {
     private static final SqlTypeDescriptor SQL_DESCRIPTOR;
     private static final JavaTypeDescriptor TYPE_DESCRIPTOR;
 
+    public static String DIALECT = "postgres";
+
     static {
+        String dialect = null;
         Properties properties = new Properties();
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             properties.load(loader.getResourceAsStream("/db.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load properties!", e);
+            dialect = properties.getProperty("dialect");
+        } catch (Exception ignored) {
         }
 
-        String dialect = properties.getProperty("dialect");
+        if (dialect == null) {
+            dialect = DIALECT;
+        }
         if (dialect.equals("postgres")) {
             SQL_DESCRIPTOR = PostgresUUIDType.PostgresUUIDSqlTypeDescriptor.INSTANCE;
             System.err.println("UUID for: PostgreSQL");
