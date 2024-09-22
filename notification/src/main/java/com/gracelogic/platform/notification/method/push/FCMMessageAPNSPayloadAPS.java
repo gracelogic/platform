@@ -11,6 +11,10 @@ public class FCMMessageAPNSPayloadAPS {
     private String badge = null;
     @JsonProperty("sound")
     private String sound = null;
+    @JsonProperty("mutable-content")
+    private String mutableContent = "1";
+    @JsonProperty("content-available")
+    private String contentAvailable = "1";
 
     public String getCategory() {
         return category;
@@ -34,5 +38,21 @@ public class FCMMessageAPNSPayloadAPS {
 
     public void setSound(String sound) {
         this.sound = sound;
+    }
+
+    public String getMutableContent() {
+        return mutableContent;
+    }
+
+    public void setMutableContent(String mutableContent) {
+        this.mutableContent = mutableContent;
+    }
+
+    public String getContentAvailable() {
+        return contentAvailable;
+    }
+
+    public void setContentAvailable(String contentAvailable) {
+        this.contentAvailable = contentAvailable;
     }
 }
