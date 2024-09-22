@@ -55,6 +55,7 @@ public class PushNotificationSender implements NotificationSender {
                 return new NotificationSenderResult(false, responseJson);
             }
         } catch (IOException ex) {
+            logger.error("Failed to send firebase push", ex);
             return new NotificationSenderResult(false, ex.getMessage());
         }
 
