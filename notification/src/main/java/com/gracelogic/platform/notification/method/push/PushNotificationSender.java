@@ -114,7 +114,6 @@ public class PushNotificationSender implements NotificationSender {
     }
 
     private String getProjectId() throws IOException {
-        initGoogleCredentials();
-        return googleCredentials.getQuotaProjectId();
+        return propertyService.getPropertyValue("notification:google_services_project_id");
     }
 }
