@@ -15,7 +15,7 @@ public class FcmMessage {
 	private String token;
 
 	@JsonProperty("topic")
-	private String topic = "news";
+	private String topic;
 
 	@JsonProperty("data")
 	private Map<String, Object> data = new HashMap<>();

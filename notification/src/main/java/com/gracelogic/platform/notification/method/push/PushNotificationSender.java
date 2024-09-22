@@ -39,7 +39,7 @@ public class PushNotificationSender implements NotificationSender {
             post.addHeader("Authorization", "Bearer " + getAccessToken());
             ObjectMapper mapper = new ObjectMapper();
             FcmMessage fcmMessage = createFcmMessage(destination, content);
-            String json = mapper.writeValueAsString(fcmMessage);
+            String json = mapper.writeValueAsString(new FCMRequest(fcmMessage));
             logger.info("FCM url: " + url);
             logger.info("FCM request: " + json);
 
@@ -63,36 +63,36 @@ public class PushNotificationSender implements NotificationSender {
     }
 
     private FcmMessage createFcmMessage(String destination, Content content) {
-        FcmMessage request = FcmMessage.to(destination);
+        FcmMessage message = FcmMessage.to(destination);
 
-        if (content.getTitle() != null && content.getBody() != null) {
+        if (content.getTitle() != null || content.getBody() != null) {
             FcmNotification fcmNotification = new FcmNotification();
             fcmNotification.setTitle(content.getTitle());
             fcmNotification.setBody(content.getBody());
 
             if (content.getFields().get("badge") != null) {
-                request.getApns().getPayload().getAps().setBadge((String) content.getFields().get("badge"));
+                message.getApns().getPayload().getAps().setBadge((String) content.getFields().get("badge"));
             }
             if (content.getFields().get("sound") != null) {
-                request.getApns().getPayload().getAps().setSound((String) content.getFields().get("sound"));
-                request.getAndroid().getNotification().setSound((String) content.getFields().get("sound"));
+                message.getApns().getPayload().getAps().setSound((String) content.getFields().get("sound"));
+                message.getAndroid().getNotification().setSound((String) content.getFields().get("sound"));
 
             }
             if (content.getFields().get("clickAction") != null) {
-                request.getAndroid().getNotification().setClick_action((String) content.getFields().get("category"));
-                request.getApns().getPayload().getAps().setCategory((String) content.getFields().get("category"));
+                message.getAndroid().getNotification().setClick_action((String) content.getFields().get("category"));
+                message.getApns().getPayload().getAps().setCategory((String) content.getFields().get("category"));
             }
 
-            request.setNotification(fcmNotification);
+            message.setNotification(fcmNotification);
         }
 
         if (content.getFields() != null) {
             for (String key : content.getFields().keySet()) {
-                request.getData().put(key, content.getFields().get(key));
+                message.getData().put(key, content.getFields().get(key));
             }
         }
 
-        return request;
+        return message;
     }
 
     @Override
