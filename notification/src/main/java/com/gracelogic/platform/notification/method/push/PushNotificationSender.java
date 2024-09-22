@@ -107,7 +107,8 @@ public class PushNotificationSender implements NotificationSender {
 
     private void initGoogleCredentials() throws IOException {
         if (googleCredentials == null) {
-            googleCredentials = GoogleCredentials.fromStream(new FileInputStream(propertyService.getPropertyValue("notification:google_services_file")));
+            googleCredentials = GoogleCredentials.fromStream(new FileInputStream(propertyService.getPropertyValue("notification:google_services_file")))
+                    .createScoped("https://www.googleapis.com/auth/firebase.messaging");
             googleCredentials.refreshIfExpired();
         }
     }
