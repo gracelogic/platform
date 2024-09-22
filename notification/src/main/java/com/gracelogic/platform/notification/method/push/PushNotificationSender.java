@@ -101,16 +101,13 @@ public class PushNotificationSender implements NotificationSender {
     }
 
     private String getAccessToken() throws IOException {
-        initGoogleCredentials();
-        return googleCredentials.getAccessToken().getTokenValue();
-    }
-
-    private void initGoogleCredentials() throws IOException {
         if (googleCredentials == null) {
             googleCredentials = GoogleCredentials.fromStream(new FileInputStream(propertyService.getPropertyValue("notification:google_services_file")))
                     .createScoped("https://www.googleapis.com/auth/firebase.messaging");
-            googleCredentials.refreshIfExpired();
         }
+
+        googleCredentials.refresh();
+        return googleCredentials.getAccessToken().getTokenValue();
     }
 
     private String getProjectId() throws IOException {
