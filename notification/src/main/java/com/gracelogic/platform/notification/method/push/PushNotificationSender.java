@@ -1,7 +1,7 @@
 package com.gracelogic.platform.notification.method.push;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gracelogic.platform.db.exception.ObjectNotFoundException;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.gracelogic.platform.notification.dto.Content;
 import com.gracelogic.platform.notification.dto.NotificationSenderResult;
 import com.gracelogic.platform.notification.service.HttpUtils;
@@ -15,8 +15,8 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -25,18 +25,22 @@ public class PushNotificationSender implements NotificationSender {
     @Autowired
     private PropertyService propertyService;
 
-    private static final String FCM_SERVICE_URL = "https://fcm.googleapis.com/fcm/send";
+    GoogleCredentials googleCredentials = null;
+
+    private static final String FCM_SERVICE_URL = "https://fcm.googleapis.com/v1/projects/%s/messages:send";
 
     private static Logger logger = Logger.getLogger(PushNotificationSender.class);
 
     @Override
     public NotificationSenderResult send(String source, String destination, Content content) {
-        HttpPost post = new HttpPost(FCM_SERVICE_URL);
-        post.addHeader("Authorization", "key=" + propertyService.getPropertyValue("notification:firebase_auth_key"));
         try {
+            String url = String.format(FCM_SERVICE_URL, getProjectId());
+            HttpPost post = new HttpPost(url);
+            post.addHeader("Authorization", "Bearer " + getAccessToken());
             ObjectMapper mapper = new ObjectMapper();
             FcmMessage fcmMessage = createFcmMessage(destination, content);
             String json = mapper.writeValueAsString(fcmMessage);
+            logger.info("FCM url: " + url);
             logger.info("FCM request: " + json);
 
             StringEntity entity = new StringEntity(json, "UTF-8");
@@ -47,8 +51,7 @@ public class PushNotificationSender implements NotificationSender {
             String responseJson = EntityUtils.toString(httpResponse.getEntity());
             logger.info("Response received: " + httpResponse.getStatusLine() + "; content: " + responseJson);
 
-            FcmResponse response = mapper.readValue(responseJson, FcmResponse.class);
-            if (response != null && response.getFailure() > 0) {
+            if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 return new NotificationSenderResult(false, responseJson);
             }
         } catch (IOException ex) {
@@ -66,17 +69,17 @@ public class PushNotificationSender implements NotificationSender {
             fcmNotification.setTitle(content.getTitle());
             fcmNotification.setBody(content.getBody());
 
-            if (content.getFields().get("category") != null) {
-                fcmNotification.setCategory((String) content.getFields().get("category"));
-            }
             if (content.getFields().get("badge") != null) {
-                fcmNotification.setBadge((String) content.getFields().get("badge"));
+                request.getApns().getPayload().getAps().setBadge((String) content.getFields().get("badge"));
             }
             if (content.getFields().get("sound") != null) {
-                fcmNotification.setSound((String) content.getFields().get("sound"));
+                request.getApns().getPayload().getAps().setSound((String) content.getFields().get("sound"));
+                request.getAndroid().getNotification().setSound((String) content.getFields().get("sound"));
+
             }
             if (content.getFields().get("clickAction") != null) {
-                fcmNotification.setClickAction((String) content.getFields().get("clickAction"));
+                request.getAndroid().getNotification().setClick_action((String) content.getFields().get("category"));
+                request.getApns().getPayload().getAps().setCategory((String) content.getFields().get("category"));
             }
 
             request.setNotification(fcmNotification);
@@ -88,7 +91,6 @@ public class PushNotificationSender implements NotificationSender {
             }
         }
 
-        request.setTimeToLive(0L);
         return request;
     }
 
@@ -97,4 +99,20 @@ public class PushNotificationSender implements NotificationSender {
         return notificationMethodId != null && notificationMethodId.equals(DataConstants.NotificationMethods.PUSH.getValue());
     }
 
+    private String getAccessToken() throws IOException {
+        initGoogleCredentials();
+        return googleCredentials.getAccessToken().getTokenValue();
+    }
+
+    private void initGoogleCredentials() throws IOException {
+        if (googleCredentials == null) {
+            googleCredentials = GoogleCredentials.fromStream(new FileInputStream(propertyService.getPropertyValue("notification:google_services_file")));
+            googleCredentials.refreshIfExpired();
+        }
+    }
+
+    private String getProjectId() throws IOException {
+        initGoogleCredentials();
+        return googleCredentials.getQuotaProjectId();
+    }
 }

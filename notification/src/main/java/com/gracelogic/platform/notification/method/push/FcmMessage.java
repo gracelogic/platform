@@ -8,30 +8,30 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FcmMessage {
-	@JsonProperty("to")
-	private final String to;
+	@JsonProperty("name")
+	private String name;
 
-	@JsonProperty("priority")
-	private final String priority = "high";
+	@JsonProperty("token")
+	private String token;
 
-	@JsonProperty("content_available")
-	private boolean contentAvailable = true;
-
-	@JsonProperty("mutable_content")
-	private boolean mutableContent = true;
+	@JsonProperty("topic")
+	private String topic = "news";
 
 	@JsonProperty("data")
-	private final Map<String, Object> data = new HashMap<>();
+	private Map<String, Object> data = new HashMap<>();
 
 	@JsonProperty("notification")
 	private FcmNotification notification;
 
-	@JsonProperty("time_to_live")
-	private Long timeToLive = 0L;
-	
-	private FcmMessage(String to) {
+	@JsonProperty("android")
+	private FCMMessageAndroid android = new FCMMessageAndroid();
+
+	@JsonProperty("apns")
+	private FCMMessageAPNS apns = new FCMMessageAPNS();
+
+	private FcmMessage(String token) {
 		super();
-		this.to = to;
+		this.token = token;
 	}
 
 	public static FcmMessage to(String to) {
@@ -60,41 +60,47 @@ public class FcmMessage {
 		this.notification = notification;
 	}
 
-	public String getTo() {
-		return to;
-	}
-
-	public String getPriority() {
-		return priority;
-	}
-
-	public boolean isContentAvailable() {
-		return contentAvailable;
-	}
-
-	public void setContentAvailable(boolean contentAvailable) {
-		this.contentAvailable = contentAvailable;
-	}
-
-	public boolean isMutableContent() {
-		return mutableContent;
-	}
-
-	public void setMutableContent(boolean mutableContent) {
-		this.mutableContent = mutableContent;
+	public String getToken() {
+		return token;
 	}
 
 	public Map<String, Object> getData() {
 		return data;
 	}
 
-	public Long getTimeToLive() {
-		return timeToLive;
+	public String getTopic() {
+		return topic;
 	}
 
-	public void setTimeToLive(Long timeToLive) {
-		this.timeToLive = timeToLive;
+	public String getName() {
+		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
+	public FCMMessageAndroid getAndroid() {
+		return android;
+	}
+
+	public void setAndroid(FCMMessageAndroid android) {
+		this.android = android;
+	}
+
+	public FCMMessageAPNS getApns() {
+		return apns;
+	}
+
+	public void setApns(FCMMessageAPNS apns) {
+		this.apns = apns;
+	}
 }
