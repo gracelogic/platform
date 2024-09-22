@@ -71,7 +71,7 @@ public class PushNotificationSender implements NotificationSender {
             fcmNotification.setBody(content.getBody());
 
             if (content.getFields().get("badge") != null) {
-                message.getApns().getPayload().getAps().setBadge((String) content.getFields().get("badge"));
+                message.getApns().getPayload().getAps().setBadge(Integer.valueOf((String) content.getFields().get("badge")));
             }
             if (content.getFields().get("sound") != null) {
                 message.getApns().getPayload().getAps().setSound((String) content.getFields().get("sound"));

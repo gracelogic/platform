@@ -8,7 +8,7 @@ public class FCMMessageAPNSPayloadAPS {
     @JsonProperty("category")
     private String category = null;
     @JsonProperty("badge")
-    private String badge = null;
+    private Integer badge = null;
     @JsonProperty("sound")
     private String sound = null;
     @JsonProperty("mutable-content")
@@ -24,11 +24,11 @@ public class FCMMessageAPNSPayloadAPS {
         this.category = category;
     }
 
-    public String getBadge() {
+    public Integer getBadge() {
         return badge;
     }
 
-    public void setBadge(String badge) {
+    public void setBadge(Integer badge) {
         this.badge = badge;
     }
 
